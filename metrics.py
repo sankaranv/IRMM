@@ -62,3 +62,21 @@ def measureF1(clusterLabels, groundTruth):
 	F1 = (F1_a+F1_b)/2
 	return F1
 
+def calculatePurity(clusterAssignments, groundTruth):
+
+	k = np.amax(clusterAssignments)
+	c = np.amax(groundTruth)
+	assign = np.zeros((k, 1))
+	purity = np.zeros((k, 1))
+	clusterSize = np.zeros((k, 1))
+	for i in range(k):
+		pointsInClust = np.where(clusterAssignments == i)
+		clusterSize[i] = pointsInClust.shape[0]
+		pointCount = np.zeros((c, 1))
+		for j in range(c):
+			#### FIX THIS! pointCount[j] = np.sum(groundTruth[pointsInClust] == j)
+		numPoints = np.amax(pointCount)
+		assign[i] = np.argmax(pointCount)
+		purity[i] = numPoints / clusterSize[i]
+	averagePurity = np.dot(purity,clusterSize) / groundTruth.shape[0]
+	return purity, clusterSize, averagePurity

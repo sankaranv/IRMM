@@ -138,4 +138,8 @@ def computeAdjacencyMatrix_hypergraph(H, W, weighted):
 	A[mask] = 0
 	return A, invDv, invDe, Dv, norm_W
 
+def computeAdjacencyMatrix_for_modularity_hypergraph(H, W, weighted):
+
+	
+
 

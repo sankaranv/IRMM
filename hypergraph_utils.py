@@ -3,10 +3,10 @@ import numpy as np
 def computeStochasticMatrix_hypergraph(H, W):
 
 	# Vertex degree vector
-	dv = np.sum(np.dot(H, np.diag(W)), axis=1)
+	dv = np.sum(np.dot(H, np.diag(W)), axis=1, keepdims=True)
 	invDv = np.diag(np.linalg.inv(dv))
 	Pi = dv/np.sum(dv)
-	De = np.diag(np.sum(H, axis=1) - 1)
+	De = np.diag(np.sum(H, axis=1, keepdims=True) - 1)
 	invDe = np.linalg.inv(De)
 	theta = np.dot(np.dot(np.dot(invDv,H),invDe),H.T)
 	# Set diagonal elements to zero
@@ -16,11 +16,11 @@ def computeStochasticMatrix_hypergraph(H, W):
 def computeNormalizedLaplacian_hypergraph(H, W):
 
 	n = H.shape[0]
-	dv = np.sum(H,axis=1) # Vertex degree vector
+	dv = np.sum(H,axis=1, keepdims=True) # Vertex degree vector
 	invdv = 1/np.sqrt(dv)
 	invDv = np.diag(invdv)
 	Dv = np.diag(dv)
-	de = np.sum(H,axis=0) - 1 # Edge degree vector
+	de = np.sum(H,axis=0, keepdims=True) - 1 # Edge degree vector
 	invde = 1/de
 	invDe = np.diag(invde)
 	# invDv * H * W * invDe * H.T * invDv
@@ -31,11 +31,11 @@ def computeNormalizedLaplacian_hypergraph(H, W):
 def computeScholkopfLaplacian_hypergraph(H, W):
 
 	n = H.shape[0]
-	dv = np.sum(H,axis=1) # Vertex degree vector
+	dv = np.sum(H,axis=1, keepdims=True) # Vertex degree vector
 	invdv = 1/np.sqrt(dv)
 	invDv = np.diag(invdv)
 	Dv = np.diag(dv)
-	de = np.sum(H,axis=0) # Edge degree vector
+	de = np.sum(H,axis=0, keepdims=True) # Edge degree vector
 	invde = 1/de
 	invDe = np.diag(invde)
 	# invDv * H * W * invDe * H.T * invDv;
@@ -49,14 +49,14 @@ def computeHybridLaplacian_hypergraph(H, W, weighted=1):
 
 	# If weighted = 1, use weighted clique formulation, else normal
 	n = H.shape[0]
-	De = np.sum(H, size=0)
+	De = np.sum(H, size=0, keepdims=True)
 	De = De.T
 	W = W * (1/(De-1))
 	norm_W = W
-	dv = np.sum(H, axis=1)
+	dv = np.sum(H, axis=1, keepdims=True)
 	invdv = 1/dv
 	invDv = np.diag(invdv)
-	de = np.sum(H, axis=0) - 1
+	de = np.sum(H, axis=0, keepdims=True) - 1
 	invde = 1/de
 	invDe = np.diag(invde)
 	Dv = np.diag(dv)
@@ -70,11 +70,11 @@ def computeHybridLaplacian_hypergraph(H, W, weighted=1):
 def computeNormalizedAdjacency_hypergraph(H, W):
 
 	n = H.shape[0]
-	dv = np.sum(H, axis=1)
+	dv = np.sum(H, axis=1, keepdims=True)
 	invdv = 1/np.sqrt(dv)
 	invDv = np.diag(invdv)
 	Dv = np.diag(dv)
-	de = np.sum(H, axis=0) - 1
+	de = np.sum(H, axis=0, keepdims=True) - 1
 	invde = 1/de
 	invDe = np.diag(invde)
 	L1 = np.dot(H, np.dot(np.diag(W), np.dot(invDe, H.T)))
@@ -92,15 +92,15 @@ def computeIncrementalLaplacian_hypergraph(H, W, invDv, invDe):
 def computeIncrementalLaplacian_hypergraph_louvain(H, W, invDv, invDe, weighted):
 
 	n = H.shape[0]
-	De = np.sum(H, axis=0)
+	De = np.sum(H, axis=0, keepdims=True)
 	De = De.T
 	if (weighted != 0):
 		W = W * (1/(De - 1))
 	norm_W = W
-	dv = np.sum(H, axis=1)
+	dv = np.sum(H, axis=1, keepdims=True)
 	invdv = 1/np.sqrt(dv)
 	invDv = np.diag(invdv)	
-	de = np.sum(H, axis=0) - 1
+	de = np.sum(H, axis=0, keepdims=True) - 1
 	invde = 1/de
 	invDe = np.diag(invde)
 	Dv = np.diag(dv)
@@ -112,7 +112,7 @@ def computeIncrementalLaplacian_hypergraph_louvain(H, W, invDv, invDe, weighted)
 
 def computeIncremental_Adjacency_hypergraph(H, W, invDv, invDe):
 
-	dv = np.sum(H, axis=1)
+	dv = np.sum(H, axis=1, keepdims=True)
 	L1 = np.dot(H,np.dot(np.diag(W),np.dot(invDe,H.T))) - np.diag(dv)
 	mask = np.eye(L1.shape[0]).astype(bool)
 	L1[mask] = 0
@@ -126,10 +126,10 @@ def computeAdjacencyMatrix_hypergraph(H, W, weighted):
 	if (weighted != 0):
 		W = W * (1/(De - 1))
 	norm_W = W
-	dv = np.sum(H, axis=1)
+	dv = np.sum(H, axis=1, keepdims=True)
 	invdv = 1/np.sqrt(dv)
 	invDv = np.diag(invdv)
-	de = np.sum(H, axis=0) - 1
+	de = np.sum(H, axis=0, keepdims=True) - 1
 	invde = 1/de
 	invDe = np.diag(invde)
 	Dv = diag(dv)
@@ -140,6 +140,81 @@ def computeAdjacencyMatrix_hypergraph(H, W, weighted):
 
 def computeAdjacencyMatrix_for_modularity_hypergraph(H, W, weighted):
 
-	
+	n = H.shape[0]
+	De = np.sum(H, axis=0, keepdims=True)
+	De = De.T
+	W = W * (1/(De - 1))
+	norm_W = W
+	dv = np.sum(H, axis=1, keepdims=True)
+	invdv = 1/np.sqrt(dv)
+	invDv = np.diag(invdv)
+	de = np.sum(H, axis=0, keepdims=True) - 1
+	invde = 1/de
+	invDe = np.diag(invde)
+	Dv = diag(dv)
+	A = np.dot(H,np.dot(np.diag(W), H.T))
+	mask = np.eye(A.shape[0]).astype(bool)
+	A[mask] = 0
+	return A, invDv, invDe, Dv, norm_W			
+
+def computeCliqueMatrix_for_modularity_hypergraph(H, W, weighted):
+
+	n = H.shape[0]
+	De = np.sum(H, axis=0, keepdims=True)
+	De= De.T
+	if (weighted != 0):
+		W = W * (1/(De - 1))
+	norm_W = W
+	A = np.dot(H,H.T)
+	dv = np.sum(H, axis=1, keepdims=True)
+	invdv = 1/np.sqrt(dv)
+	invDv = np.diag(invdv)
+	invde = 1/(De-1)
+	invDe = np.diag(invde)
+	Dv = diag(dv)
+	mask = np.eye(A.shape[0]).astype(bool)
+	A[mask] = 0
+	return A, invDv, invDe, Dv, norm_W
+
+def computeCliqueMatrix_for_laplacian_hypergraph(H, W, weighted):
+
+	n = H.shape[0]
+	De = np.sum(H, axis=0, keepdims=True)
+	De= De.T
+	if (weighted != 0):
+		W = W * (1/(De - 1))
+	norm_W = W
+	A = np.dot(H,H.T)
+	dv = np.sum(H, axis=1, keepdims=True)
+	invdv = 1/np.sqrt(dv)
+	invDv = np.diag(invdv)
+	invde = 1/(De-1)
+	invDe = np.diag(invde)
+	Dv = diag(dv)
+	mask = np.eye(A.shape[0]).astype(bool)
+	A[mask] = 0
+	L = np.eye(n) - np.dot(invDv,A)	
+	return L, invDv, invDe, Dv, norm_W
+
+def computeModularityMatrix_hypergraph(H, W, weighted):
+
+	A = computeAdjacencyMatrix_hypergraph(H, W, weighted)
+	M = computeModularityforAdjacency(A)
+	return M
+
+def computeModularityforAdjacency(A):
+
+	k = np.sum(A, axis=1, keepdims=True)
+	m = np.sum(k)
+	P = np.dot(k,k.T)/m
+	M = A - P
+	return M
+
+
+
+
+
+
+
 
 

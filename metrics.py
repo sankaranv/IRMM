@@ -70,11 +70,12 @@ def calculatePurity(clusterAssignments, groundTruth):
 	purity = np.zeros((k, 1))
 	clusterSize = np.zeros((k, 1))
 	for i in range(k):
-		pointsInClust = np.where(clusterAssignments == i)
-		clusterSize[i] = pointsInClust.shape[0]
+		pointsInClust = np.where(clusterAssignments == i)[0]
+		clusterSize[i] = len(pointsInClust)
 		pointCount = np.zeros((c, 1))
 		for j in range(c):
-			#### FIX THIS! pointCount[j] = np.sum(groundTruth[pointsInClust] == j)
+			#Check if this works
+			pointCount[j] = np.sum(groundTruth[pointsInClust] == j)
 		numPoints = np.amax(pointCount)
 		assign[i] = np.argmax(pointCount)
 		purity[i] = numPoints / clusterSize[i]

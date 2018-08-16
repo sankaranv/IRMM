@@ -210,6 +210,53 @@ def computeModularityforAdjacency(A):
 	M = A - P
 	return M
 
+def assignGroups(Y):
+
+	pass
+	# return S, groups, tempGroups
+
+
+def convertAdjacencyToIncidence(A):
+
+	n = A.shape[0]
+	H = np.empty(shape=[n, 0])
+	e = 0
+	for i in range (n):
+		for j in range(i+1,n):
+			if (A[i][j]==1):
+				# H[:,e] = np.zeros((n, 1))
+				H = np.append(H, np.zeros((n, 1)), axis=1)
+				H[i,e] = 1
+				H[j,e] = 1
+				e = e + 1
+	return H
+
+def updateWeights(H, W, clusters):
+
+	m = H.shape[1]
+	n = H.shape[0]
+	k = np.amax(clusters)
+	changeInWeights = np.zeros((m, 1))
+	for i in range(m):
+		nodesInHyperedge = np.where(H[:,i] == 1)[0]	
+		nodeClusters = clusters[nodesInHyperedge]
+		numNodesInHyperedge = len(nodesInHyperedge)
+		for j in range(k):
+			numNodesInCluster = np.sum(nodeClusters == j)
+			changeInWeights[i] = changeInWeights[i] + (1 / (numNodesInCluster + 1))
+		changeInWeights[i] = changeInWeights[i] / (1 / (numNodesInHyperedge + k))
+	changeInWeights = m * changeInWeights / np.sum(changeInWeights)
+	newW = (changeInWeights + W) / 2
+	return newW
+
+
+
+
+
+
+
+
+
 
 
 
